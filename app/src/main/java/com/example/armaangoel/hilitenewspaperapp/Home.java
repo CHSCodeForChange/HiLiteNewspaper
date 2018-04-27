@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 public class Home extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.startup);
+
 
 
         new Handler().postDelayed(new Runnable() {
@@ -33,6 +35,7 @@ public class Home extends AppCompatActivity {
 
             }
         }, timeout);
+
 
 
 

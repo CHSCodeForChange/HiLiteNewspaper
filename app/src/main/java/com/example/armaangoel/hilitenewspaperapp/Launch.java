@@ -9,12 +9,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 
@@ -28,6 +30,9 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private ArrayAdapter adapter;
+    private int page;
+
+    private Button b1, b2;
 
     private ProgressDialog progressDialog;
 
@@ -39,11 +44,15 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
         Top, Feature, News, StudentSection, Entertainment, Sports
     }
 
-    public Section section;
+    public static Section section;
 
-    public final String TOP = "https://www.hilite.org?json=get_recent_posts&page=1&count=12&include=posts,title,excerpt,thumbnail,url,modified";
+    public final String TOP = "https://www.hilite.org?json=get_recent_posts";
+
+
+
     public final String START = "https://www.hilite.org?json=get_category_posts&slug=";
-    public final String END = "&page=1&count=12&include=posts,title,excerpt,thumbnail,url,modified";
+    public final String PAGE = "&page=";
+    public final String END = "&count=12&include=posts,title,excerpt,thumbnail,url,modified";
 
 
 
@@ -56,20 +65,42 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     public void mainMenu() {
+        setContentView(R.layout.activity_home);
 
+        page = 1;
+        c = Launch.this;
         section = Section.Top;
 
-        setContentView(R.layout.activity_home);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this,drawer,R.string.open, R.string.close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        b1 = (Button) findViewById(R.id.back);
+        b2 = (Button) findViewById(R.id.forward);
 
-        c = Launch.this;
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (page > 1) {
+                    page--;
+                    load();
+                }
+
+            }
+        });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                page++;
+                load();
+            }
+        });
+
+
 
         mListView = (ListView) findViewById(R.id.listview);
 
@@ -105,12 +136,12 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
 
         String url = "";
 
-        if (section == Section.Top) url = TOP;
-        else if (section == Section.Feature) url = START + "feature" + END;
-        else if (section == Section.News) url = START + "news" + END;
-        else if (section == Section.StudentSection) url = START + "student-section" + END;
-        else if (section == Section.Entertainment) url = START + "entertainment" + END;
-        else if (section == Section.Sports) url = START + "sports" + END;
+        if (section == Section.Top) url = TOP + PAGE + page + END ;
+        else if (section == Section.Feature) url = START + "feature" + PAGE + page + END;
+        else if (section == Section.News) url = START + "news" + PAGE + page + END;
+        else if (section == Section.StudentSection) url = START + "student-section" + PAGE + page + END;
+        else if (section == Section.Entertainment) url = START + "entertainment" + PAGE + page + END;
+        else if (section == Section.Sports) url = START + "sports" + PAGE + page + END;
 
         AsyncTask<String, Void, ArrayList<Reader.Message>> reader = new Reader().execute(url);
 
@@ -121,7 +152,7 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
         messages = r.finishedMessages;
         adapter = new myAdapter(Launch.this, messages);
         mListView.setAdapter(adapter);
-        progressDialog.hide();
+      //  progressDialog.hide();
     }
 
     @Override
@@ -136,8 +167,10 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        progressDialog.show();
+//        progressDialog.show();
         int id  = item.getItemId();
+
+        page = 1;
 
         if (id == R.id.home){
             section = Section.Top;

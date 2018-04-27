@@ -8,14 +8,35 @@
     android:orientation="vertical"
     tools:context="com.example.armaangoel.hilitenewspaperapp.Home">
 
+
     <android.widget.LinearLayout
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
 
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="560dp" />
+
+        <android.widget.LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="188dp"
+                android:layout_height="wrap_content"
+                android:text="Previous"/>
+
+            <Button
+                android:id="@+id/forward"
+                android:layout_width="188dp"
+                android:layout_height="wrap_content"
+                android:text="Next" />
+        </android.widget.LinearLayout>
 
     </android.widget.LinearLayout>
 

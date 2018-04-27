@@ -67,7 +67,7 @@ public class myAdapter extends ArrayAdapter<String> {
         int start = excerpt.indexOf("<p>")+3, end = excerpt.indexOf("[&");
         int apos = excerpt.indexOf("&#8217;");
         if (apos != -1) excerpt = excerpt.substring(0,apos) + "'" + excerpt.substring(apos+7);
-        return excerpt.equals("") ? excerpt : excerpt.substring(start,end) + ". . .";
+        return excerpt.equals("") ? excerpt : excerpt; //.substring(start,end) + ". . ."; //TODO: FIX THIS ERROR
     }
 
     static class ViewHolder {
