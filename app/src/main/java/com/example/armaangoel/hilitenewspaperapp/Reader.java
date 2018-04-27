@@ -1,11 +1,8 @@
 package com.example.armaangoel.hilitenewspaperapp;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.AndroidRuntimeException;
-import android.util.JsonReader;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -14,11 +11,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -32,9 +27,10 @@ import java.util.ArrayList;
 
 public class Reader extends AsyncTask<String, Void, ArrayList<Reader.Message>> {
 
-    ProgressDialog pd;
 
     ArrayList<Message> finishedMessages;
+
+    boolean isFinished = false;
 
     private Exception exception;
 
@@ -42,21 +38,16 @@ public class Reader extends AsyncTask<String, Void, ArrayList<Reader.Message>> {
 
     protected void onPreExecute() {
         super.onPreExecute();
-
-        pd = new ProgressDialog(Launch.c);
-        pd.setMessage("Please wait");
-        pd.setCancelable(false);
-        pd.show();
     }
 
     @Override
     protected ArrayList<Message> doInBackground(String... url) {
         try {
             finishedMessages = readUrl(url[0]);
+            isFinished = true;
 
             //System.out.println(finishedMessages.get(0).title);
 
-            pd.dismiss();
             return finishedMessages;
         } catch (Exception e) {
             this.exception = e;
@@ -99,25 +90,22 @@ public class Reader extends AsyncTask<String, Void, ArrayList<Reader.Message>> {
                 String title = c.getString("title");
                 String excerpt = c.getString("excerpt");
                 String date = c.getString("modified");
-
-
-                String thumbnail = c.getString("thumbnail");
-                String thumb = c.getJSONObject("thumbnail_images").getJSONObject("medium").getString("url");
-
-
                 String link = c.getString("url");
 
 
-                URL url = new URL(thumb);
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
+                if (c.has("thumbnail_images")) {
+                    String thumb = c.getJSONObject("thumbnail_images").getJSONObject("medium").getString("url");
+                    URL url = new URL(thumb);
+                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    messages.add(new Message(title, excerpt, bmp, date, link));
+                } else {
+                    messages.add(new Message(title, excerpt, date, link));
 
-                messages.add(new Message(title, excerpt, bmp, date, link));
+                }
             }
         } catch (final JSONException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return messages;
@@ -137,6 +125,15 @@ public class Reader extends AsyncTask<String, Void, ArrayList<Reader.Message>> {
             this.url = url;
             this.date = date;
         }
+
+
+        public Message(String text, String excerpt, String date, String url) {
+            this.title = text;
+            this.excerpt = excerpt;
+            this.url = url;
+            this.date = date;
+        }
+
     }
 
 
