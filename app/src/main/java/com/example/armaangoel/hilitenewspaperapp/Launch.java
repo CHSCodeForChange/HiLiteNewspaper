@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -45,7 +46,6 @@ public class Launch extends AppCompatActivity {
     public final String END = "&count=12&include=posts,title,excerpt,thumbnail,url,modified";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +56,23 @@ public class Launch extends AppCompatActivity {
         section = Section.Recent;
 
         mainMenu();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.links) {
+            Intent links = new Intent(Launch.this, Links.class);
+            startActivity(links);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void mainMenu() {
@@ -103,6 +120,8 @@ public class Launch extends AppCompatActivity {
 
                 WebView web = (WebView)findViewById(R.id.web);
                 web.setWebViewClient(new MyWebViewClient(Launch.this));
+                web.getSettings().setJavaScriptEnabled(true);
+                web.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
                 web.loadUrl(messages.get(position).url);
             }
         });
