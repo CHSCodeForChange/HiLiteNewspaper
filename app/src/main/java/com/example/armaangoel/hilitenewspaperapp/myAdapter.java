@@ -27,6 +27,7 @@ public class myAdapter extends ArrayAdapter<String> {
 
         this.mContext = context;
         this.messages = messages;
+
     }
 
     @Override

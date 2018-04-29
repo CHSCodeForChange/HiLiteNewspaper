@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 public class Home extends AppCompatActivity {
 
 
-    public final int timeout = 500;
+    public final int timeout = 0;
 
 
     @Override

@@ -3,6 +3,7 @@ package com.example.armaangoel.hilitenewspaperapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -21,11 +22,12 @@ import android.widget.ListView;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class Launch extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ListView mListView;
-    ArrayList<Reader.Message> messages = new ArrayList<Reader.Message>();
+    public ListView mListView;
+    public ArrayList<Reader.Message> messages = new ArrayList<Reader.Message>();
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -34,11 +36,6 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
 
     private Button b1, b2;
 
-    private ProgressDialog progressDialog;
-
-
-
-    public static Context c;
 
     public enum Section {
         Top, Feature, News, StudentSection, Entertainment, Sports
@@ -60,17 +57,14 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        page = 1;
+        section = Section.Top;
 
         mainMenu();
     }
 
     public void mainMenu() {
         setContentView(R.layout.activity_home);
-
-        page = 1;
-        c = Launch.this;
-        section = Section.Top;
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this,drawer,R.string.open, R.string.close);
@@ -107,16 +101,6 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
         NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
 
-        AsyncTask<String, Void, ArrayList<Reader.Message>> reader = new Reader().execute(TOP);
-
-
-        Reader r = (Reader) reader;
-
-        while (r.finishedMessages == null) {}
-
-        messages = r.finishedMessages;
-        adapter = new myAdapter(Launch.this, messages);
-        mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -127,38 +111,31 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
                 web.loadUrl(messages.get(position).url);
             }
         });
+
+        load();
     }
 
 
     public void load() {
-        drawer.closeDrawers();
-        toggle.syncState();
-
         String url = "";
 
-        if (section == Section.Top) url = TOP + PAGE + page + END ;
+        if (section == Section.Top) url = TOP + PAGE + page + END;
         else if (section == Section.Feature) url = START + "feature" + PAGE + page + END;
         else if (section == Section.News) url = START + "news" + PAGE + page + END;
-        else if (section == Section.StudentSection) url = START + "student-section" + PAGE + page + END;
-        else if (section == Section.Entertainment) url = START + "entertainment" + PAGE + page + END;
+        else if (section == Section.StudentSection)
+            url = START + "student-section" + PAGE + page + END;
+        else if (section == Section.Entertainment)
+            url = START + "entertainment" + PAGE + page + END;
         else if (section == Section.Sports) url = START + "sports" + PAGE + page + END;
 
-        AsyncTask<String, Void, ArrayList<Reader.Message>> reader = new Reader().execute(url);
 
-
-        Reader r = (Reader) reader;
-        while (!r.isFinished) {}
-
-        messages = r.finishedMessages;
-        adapter = new myAdapter(Launch.this, messages);
-        mListView.setAdapter(adapter);
-      //  progressDialog.hide();
+        Reader r = new Reader(Launch.this);
+        r.execute(url);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)){
-
             return true;
         }
         return false;
@@ -168,6 +145,10 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 //        progressDialog.show();
+
+        drawer.closeDrawers();
+        toggle.syncState();
+
         int id  = item.getItemId();
 
         page = 1;

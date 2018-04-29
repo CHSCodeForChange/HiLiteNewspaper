@@ -1,9 +1,11 @@
 package com.example.armaangoel.hilitenewspaperapp;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -25,41 +28,54 @@ import java.util.ArrayList;
  * Created by armaangoel on 4/23/18.
  */
 
-public class Reader extends AsyncTask<String, Void, ArrayList<Reader.Message>> {
+public class Reader extends AsyncTask<String, Void, Void> {
 
 
-    ArrayList<Message> finishedMessages;
-
-    boolean isFinished = false;
-
+    public ArrayList<Message> finishedMessages;
+    public boolean isFinished = false;
     private Exception exception;
+    private ProgressDialog pd;
+
+    private ArrayAdapter adapter;
 
 
+
+    private Launch l = new Launch();
+
+    public Reader (Launch l) {
+        this.l = l;
+        pd = new ProgressDialog(l);
+    }
 
     protected void onPreExecute() {
         super.onPreExecute();
+
+        pd.setMessage("Loading...");
+        pd.show();
     }
 
     @Override
-    protected ArrayList<Message> doInBackground(String... url) {
+    protected Void doInBackground(String... url) {
+
         try {
             finishedMessages = readUrl(url[0]);
             isFinished = true;
-
-            //System.out.println(finishedMessages.get(0).title);
-
-            return finishedMessages;
         } catch (Exception e) {
             this.exception = e;
-
-            return null;
         }
 
+        return null;
     }
 
-    protected void onPostExecute(List<Message> messages) {
-        //pd.dismiss();
+    protected void onPostExecute(Void result) {
+        adapter = new myAdapter(l, finishedMessages);
+        l.mListView.setAdapter(adapter);
+        l.messages = finishedMessages;
+        if (pd.isShowing()) {
+            pd.dismiss();
+        }
     }
+
 
 
 
