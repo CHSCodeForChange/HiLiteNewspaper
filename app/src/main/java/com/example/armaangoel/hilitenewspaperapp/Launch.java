@@ -31,7 +31,7 @@ public class Launch extends AppCompatActivity {
 
 
     public enum Section {
-        Recent, Feature, News, StudentSection, Entertainment, Sports, Perspectives, FifteenMinutes
+        Recent, Feature, News, StudentSection, Entertainment, Sports, Perspectives, FifteenMinutes, Jam, Online
     }
 
     public static Section section;
@@ -145,6 +145,14 @@ public class Launch extends AppCompatActivity {
         else if (section == Section.FifteenMinutes) {
             url = START + "fame" + PAGE + page + END;
             getSupportActionBar().setTitle(title + "15 Minutes");
+        }
+        else if (section == Section.Jam) {
+            url = START + "just-a-minute" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Just A Minute");
+        }
+        else if (section == Section.Online) {
+            url = START + "onlineonly" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Online Only");
         }
 
 

@@ -48,6 +48,10 @@ public class Sections extends AppCompatActivity {
                         l.section = Launch.Section.Perspectives;
                     } else if (finalI == 7) {
                         l.section = Launch.Section.FifteenMinutes;
+                    } else if (finalI == 8) {
+                        l.section = Launch.Section.Jam;
+                    } else if (finalI == 9) {
+                        l.section = Launch.Section.Online;
                     }
 
                     l.page = 1;
