@@ -16,7 +16,8 @@ public class MyWebViewClient extends WebViewClient
     public MyWebViewClient(Activity a)
     {
         progressDialog = new ProgressDialog(a);
-        progressDialog.setMessage("Loading Story");
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading Story...");
         progressDialog.show();
         // do nothing
     }

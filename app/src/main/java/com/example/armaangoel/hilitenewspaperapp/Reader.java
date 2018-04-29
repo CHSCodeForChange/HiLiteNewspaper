@@ -50,7 +50,8 @@ public class Reader extends AsyncTask<String, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        pd.setMessage("Loading...");
+        pd.setMessage("Loading Stories...");
+        pd.setCancelable(false);
         pd.show();
     }
 
@@ -111,7 +112,8 @@ public class Reader extends AsyncTask<String, Void, Void> {
 
 
                 if (c.has("thumbnail_images")) {
-                    String thumb = c.getJSONObject("thumbnail_images").getJSONObject("medium").getString("url");
+                    String thumb = c.getJSONObject("thumbnail_images").getJSONObject("medium" +
+                            "").getString("url");
                     URL url = new URL(thumb);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     messages.add(new Message(title, excerpt, bmp, date, link));

@@ -2,9 +2,11 @@ package com.example.armaangoel.hilitenewspaperapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,21 +26,22 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class Launch extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Launch extends AppCompatActivity {
 
     public ListView mListView;
     public ArrayList<Reader.Message> messages = new ArrayList<Reader.Message>();
 
-    private DrawerLayout drawer;
-    private ActionBarDrawerToggle toggle;
     private ArrayAdapter adapter;
-    private int page;
+    public static int page;
 
-    private Button b1, b2;
+    private String title = "HiLite - ";
+
+
+    public static Launch l;
 
 
     public enum Section {
-        Top, Feature, News, StudentSection, Entertainment, Sports
+        Recent, Feature, News, StudentSection, Entertainment, Sports, Perspectives, FifteenMinutes
     }
 
     public static Section section;
@@ -57,8 +60,10 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        l = this;
+
         page = 1;
-        section = Section.Top;
+        section = Section.Recent;
 
         mainMenu();
     }
@@ -66,45 +71,45 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     public void mainMenu() {
         setContentView(R.layout.activity_home);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer);
-        toggle = new ActionBarDrawerToggle(this,drawer,R.string.open, R.string.close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        b1 = (Button) findViewById(R.id.back);
-        b2 = (Button) findViewById(R.id.forward);
-
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (page > 1) {
-                    page--;
-                    load();
-                }
-
-            }
-        });
-
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                page++;
-                load();
-            }
-        });
 
 
 
         mListView = (ListView) findViewById(R.id.listview);
 
-        NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
-        nv.setNavigationItemSelectedListener(this);
+
+        BottomNavigationView btm = (BottomNavigationView) findViewById(R.id.bottomBar);
+        btm.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.prev) {
+                    if (page > 1) {
+                        page--;
+                        load();
+                    }
+                } else if (id == R.id.next) {
+                    page++;
+                    load();
+                } else if (id == R.id.sections) {
+                    Intent homeIntent = new Intent(Launch.this, Category.class);
+                    startActivity(homeIntent);
+                }
+
+                return false;
+            }
+        });
+
+
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 setContentView(R.layout.webview);
+
+                getSupportActionBar().setTitle(messages.get(position).title);
 
                 WebView web = (WebView)findViewById(R.id.web);
                 web.setWebViewClient(new MyWebViewClient(Launch.this));
@@ -119,65 +124,42 @@ public class Launch extends AppCompatActivity implements NavigationView.OnNaviga
     public void load() {
         String url = "";
 
-        if (section == Section.Top) url = TOP + PAGE + page + END;
-        else if (section == Section.Feature) url = START + "feature" + PAGE + page + END;
-        else if (section == Section.News) url = START + "news" + PAGE + page + END;
-        else if (section == Section.StudentSection)
+        if (section == Section.Recent) {
+            url = TOP + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Recent");
+        }
+        else if (section == Section.Feature) {
+            url = START + "feature" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Feature");
+        }
+        else if (section == Section.News) {
+            url = START + "news" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "News");
+        }
+        else if (section == Section.StudentSection) {
             url = START + "student-section" + PAGE + page + END;
-        else if (section == Section.Entertainment)
+            getSupportActionBar().setTitle(title + "Student Section");
+        }
+        else if (section == Section.Entertainment) {
             url = START + "entertainment" + PAGE + page + END;
-        else if (section == Section.Sports) url = START + "sports" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Entertainment");
+        }
+        else if (section == Section.Sports) {
+            url = START + "sports" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Sports");
+        }
+        else if (section == Section.Perspectives) {
+            url = START + "perspectives" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "Perspectives");
+        }
+        else if (section == Section.FifteenMinutes) {
+            url = START + "fame" + PAGE + page + END;
+            getSupportActionBar().setTitle(title + "15 Minutes");
+        }
 
 
         Reader r = new Reader(Launch.this);
         r.execute(url);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return false;
-
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        progressDialog.show();
-
-        drawer.closeDrawers();
-        toggle.syncState();
-
-        int id  = item.getItemId();
-
-        page = 1;
-
-        if (id == R.id.home){
-            section = Section.Top;
-            load();
-        } else if (id == R.id.home){
-            section = Section.Top;
-            load();
-        } else if (id == R.id.news){
-            section = Section.News;
-            load();
-        } else if (id == R.id.feature){
-            section = Section.Feature;
-            load();
-        } else if (id == R.id.studentsection){
-            section = Section.StudentSection;
-            load();
-        } else if (id == R.id.entertainment){
-            section = Section.Entertainment;
-            load();
-        } else if (id == R.id.sports){
-            section = Section.Sports;
-            load();
-        }
-
-        return false;
-
     }
 
 
