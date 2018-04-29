@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.GridView;
 
-public class Category extends AppCompatActivity {
+public class Sections extends AppCompatActivity {
 
     private GridLayout grid;
 

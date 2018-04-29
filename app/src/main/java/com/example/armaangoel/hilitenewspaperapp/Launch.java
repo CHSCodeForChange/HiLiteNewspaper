@@ -1,30 +1,20 @@
 package com.example.armaangoel.hilitenewspaperapp;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class Launch extends AppCompatActivity {
 
@@ -80,6 +70,7 @@ public class Launch extends AppCompatActivity {
 
 
         BottomNavigationView btm = (BottomNavigationView) findViewById(R.id.bottomBar);
+        btm.setSelectedItemId(R.id.sections);
         btm.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -94,14 +85,13 @@ public class Launch extends AppCompatActivity {
                     page++;
                     load();
                 } else if (id == R.id.sections) {
-                    Intent homeIntent = new Intent(Launch.this, Category.class);
+                    Intent homeIntent = new Intent(Launch.this, Sections.class);
                     startActivity(homeIntent);
                 }
 
                 return false;
             }
         });
-
 
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

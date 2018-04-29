@@ -3,6 +3,7 @@ package com.example.armaangoel.hilitenewspaperapp;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,8 @@ public class myAdapter extends ArrayAdapter<String> {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        mViewHolder.headline.setText(messages.get(position).title);
-        mViewHolder.excerpt.setText(trimExcerpt(messages.get(position).excerpt));
+        mViewHolder.headline.setText(decode(messages.get(position).title));
+        mViewHolder.excerpt.setText(decode(messages.get(position).excerpt));
         if (messages.get(position).thumbnail != null) mViewHolder.thumb.setImageBitmap(messages.get(position).thumbnail);
         mViewHolder.date.setText(messages.get(position).date);
 
@@ -64,11 +65,8 @@ public class myAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    public String trimExcerpt (String excerpt) {
-        int start = excerpt.indexOf("<p>")+3, end = excerpt.indexOf("[&");
-        int apos = excerpt.indexOf("&#8217;");
-        if (apos != -1) excerpt = excerpt.substring(0,apos) + "'" + excerpt.substring(apos+7);
-        return excerpt.equals("") ? excerpt : excerpt; //.substring(start,end) + ". . ."; //TODO: FIX THIS ERROR
+    public String decode (String excerpt) {
+        return Html.fromHtml(excerpt).toString();
     }
 
     static class ViewHolder {

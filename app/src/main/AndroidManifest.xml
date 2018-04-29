@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".Launch" />
         <activity
-            android:name=".Category"
+            android:name=".Sections"
             android:label="@string/title_activity_category"
             android:theme="@style/AppTheme"></activity>
     </application>
