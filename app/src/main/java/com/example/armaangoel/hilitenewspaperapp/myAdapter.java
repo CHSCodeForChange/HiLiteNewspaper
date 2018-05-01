@@ -58,7 +58,13 @@ public class myAdapter extends ArrayAdapter<String> {
 
         mViewHolder.headline.setText(decode(messages.get(position).title));
         mViewHolder.excerpt.setText(decode(messages.get(position).excerpt));
-        if (messages.get(position).thumbnail != null) mViewHolder.thumb.setImageBitmap(messages.get(position).thumbnail);
+        if (messages.get(position).thumbnail != null)  {
+            mViewHolder.thumb.setVisibility(View.VISIBLE);
+            mViewHolder.thumb.setImageBitmap(messages.get(position).thumbnail);
+        } else {
+            mViewHolder.thumb.setImageBitmap(null);
+            mViewHolder.thumb.setVisibility(View.GONE);
+        }
         mViewHolder.date.setText(messages.get(position).date);
 
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -117,6 +118,9 @@ public class Reader extends AsyncTask<String, Void, Void> {
                     URL url = new URL(thumb);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     messages.add(new Message(title, excerpt, bmp, date, link));
+
+                    System.out.println(title);
+                    System.out.println(thumb);
                 } else {
                     messages.add(new Message(title, excerpt, date, link));
 
@@ -137,8 +141,8 @@ public class Reader extends AsyncTask<String, Void, Void> {
         String date;
 
         public Message(String text, String excerpt, Bitmap thumbnail, String date, String url) {
-            this.title = text;
-            this.excerpt = excerpt;
+            this.title = decode(text);
+            this.excerpt = decode(excerpt);
             this.thumbnail = thumbnail;
             this.url = url;
             this.date = date;
@@ -146,12 +150,15 @@ public class Reader extends AsyncTask<String, Void, Void> {
 
 
         public Message(String text, String excerpt, String date, String url) {
-            this.title = text;
-            this.excerpt = excerpt;
+            this.title = decode(text);
+            this.excerpt = decode(excerpt);
             this.url = url;
             this.date = date;
         }
 
+        public String decode (String html) {
+            return Html.fromHtml(html).toString();
+        }
     }
 
 
