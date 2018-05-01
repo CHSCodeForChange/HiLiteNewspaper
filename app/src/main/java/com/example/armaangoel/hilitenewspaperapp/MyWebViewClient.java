@@ -18,10 +18,10 @@ public class MyWebViewClient extends WebViewClient
 
     public MyWebViewClient(Activity a)
     {
-        progressDialog = new ProgressDialog(a);
+        /*progressDialog = new ProgressDialog(a);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading Story...");
-        progressDialog.show();
+        progressDialog.show();*/
         // do nothing
     }
 
@@ -39,6 +39,6 @@ public class MyWebViewClient extends WebViewClient
         // TODO Auto-generated method stub
         super.onPageFinished(view, url);
 
-        progressDialog.hide();
+        //progressDialog.hide();
     }
 }

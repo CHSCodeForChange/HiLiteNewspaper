@@ -55,6 +55,7 @@ public class Launch extends AppCompatActivity {
         page = 1;
         section = Section.Recent;
 
+
         mainMenu();
     }
 
@@ -114,15 +115,14 @@ public class Launch extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                setContentView(R.layout.webview);
+                Intent web = new Intent(Launch.this, WebActivity.class);
+                Bundle data = new Bundle();
+                data.putString("url", messages.get(position).url);
+                data.putString("title", messages.get(position).title);
 
-                getSupportActionBar().setTitle(messages.get(position).title);
+                web.putExtras(data);
+                startActivity(web);
 
-                WebView web = (WebView)findViewById(R.id.web);
-                web.setWebViewClient(new MyWebViewClient(Launch.this));
-                web.getSettings().setJavaScriptEnabled(true);
-                web.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-                web.loadUrl(messages.get(position).url);
             }
         });
 

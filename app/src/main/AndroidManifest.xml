@@ -23,8 +23,10 @@
             android:name=".Sections"
             android:label="@string/title_activity_category"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Links"
-            android:label="Other Pages"></activity>
+        <activity
+            android:name=".Links"
+            android:label="Other Pages" />
+        <activity android:name=".WebActivity"></activity>
     </application>
 
 </manifest>

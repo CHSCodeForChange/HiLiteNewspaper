@@ -56,8 +56,8 @@ public class myAdapter extends ArrayAdapter<String> {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        mViewHolder.headline.setText(decode(messages.get(position).title));
-        mViewHolder.excerpt.setText(decode(messages.get(position).excerpt));
+        mViewHolder.headline.setText(messages.get(position).title);
+        mViewHolder.excerpt.setText(messages.get(position).excerpt);
         if (messages.get(position).thumbnail != null)  {
             mViewHolder.thumb.setVisibility(View.VISIBLE);
             mViewHolder.thumb.setImageBitmap(messages.get(position).thumbnail);
@@ -69,10 +69,6 @@ public class myAdapter extends ArrayAdapter<String> {
 
 
         return convertView;
-    }
-
-    public String decode (String excerpt) {
-        return Html.fromHtml(excerpt).toString();
     }
 
     static class ViewHolder {
