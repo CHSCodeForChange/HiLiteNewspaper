@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class Launch extends AppCompatActivity {
 
 
     public enum Section {
-        Recent, Feature, News, StudentSection, Entertainment, Sports, Perspectives, FifteenMinutes, Jam, Online
+        Recent, Feature, News, StudentSection, Entertainment, Sports, Perspectives, FifteenMinutes, Jam, Online, Search
     }
 
     public static Section section;
@@ -44,6 +45,9 @@ public class Launch extends AppCompatActivity {
     public final String START = "https://www.hilite.org?json=get_category_posts&slug=";
     public final String PAGE = "&page=";
     public final String END = "&count=12&include=posts,title,excerpt,thumbnail,url,modified";
+
+    public final String SEARCHSTART = "https://hilite.org/?json=get_search_results&search=";
+    public String search = "";
 
 
     @Override
@@ -62,6 +66,33 @@ public class Launch extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_main, menu);
+
+        final MenuItem search = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) search.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                page = 1;
+                setSearch(s);
+                section = Section.Search;
+
+                searchView.clearFocus();
+                searchView.setFocusable(false);
+                search.collapseActionView();
+                searchView.setIconified(true);
+
+                load();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -115,6 +146,8 @@ public class Launch extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                WebActivity.mode = WebActivity.Mode.Normal;
+
                 Intent web = new Intent(Launch.this, WebActivity.class);
                 Bundle data = new Bundle();
                 data.putString("url", messages.get(position).url);
@@ -172,6 +205,9 @@ public class Launch extends AppCompatActivity {
         else if (section == Section.Online) {
             url = START + "onlineonly" + PAGE + page + END;
             getSupportActionBar().setTitle(title + "Online Only");
+        } else if (section == Section.Search) {
+            url = SEARCHSTART + search.replace(' ', '+') + PAGE + page + END;
+            getSupportActionBar().setTitle("Results for: \"" + search + "\"");
         }
 
 
@@ -183,10 +219,19 @@ public class Launch extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            if (section == Section.Search) {
+                section = Section.Recent;
+                page = 1;
+            }
+
             mainMenu();
             return true;
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

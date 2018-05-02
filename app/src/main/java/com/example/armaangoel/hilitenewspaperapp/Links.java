@@ -38,6 +38,28 @@ public class Links extends AppCompatActivity {
                         browserIntent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/hilitenews/"));
                     } else if (finalI == 3) {
                         browserIntent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/user/HiLiteOnline"));
+                    } else if (finalI == 4) {
+                        WebActivity.mode = WebActivity.Mode.Normal;
+
+                        Intent web = new Intent(Links.this, WebActivity.class);
+                        Bundle data = new Bundle();
+                        data.putString("url", "https://hilite.org/about/");
+                        data.putString("title", "About");
+
+                        web.putExtras(data);
+                        startActivity(web);
+
+                    } else {
+
+                        WebActivity.mode = WebActivity.Mode.Normal;
+
+                        Intent web = new Intent(Links.this, WebActivity.class);
+                        Bundle data = new Bundle();
+                        data.putString("url", "https://hilite.org/awards/");
+                        data.putString("title", "Awards");
+
+                        web.putExtras(data);
+                        startActivity(web);
                     }
 
                     if (browserIntent != null) {

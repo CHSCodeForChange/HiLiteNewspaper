@@ -22,6 +22,12 @@ public class WebActivity extends AppCompatActivity {
     private WebView web;
     String url;
 
+    public static enum Mode  {
+        Normal, Extras
+    };
+
+    public static Mode mode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,11 @@ public class WebActivity extends AppCompatActivity {
             if (doc != null) {
                 web.loadData(doc.toString(),"text/html; charset=UTF-8", null);
             } else {
-                web.loadUrl(url);
+                if (mode == Mode.Normal) {
+                    web.loadUrl(url);
+                } else {
+                    finish();
+                }
             }
 
             progressDialog.dismiss();
@@ -94,11 +104,18 @@ public class WebActivity extends AppCompatActivity {
         protected Void doInBackground(String... strings) {
             url = strings[0];
             try {
-                doc = Jsoup.connect(url).ignoreContentType(true).get();
-                doc.getElementsByAttributeValue("id", "mobile-menu").remove();
-                doc.getElementsByClass("crp_related").remove();
-                doc.getElementsByAttributeValue("id", "sidebar").remove();
-                doc.getElementsByClass("footerwrap").remove();
+                if (mode == Mode.Normal) {
+                    doc = Jsoup.connect(url).ignoreContentType(true).get();
+                    doc.getElementsByAttributeValue("id", "mobile-menu").remove();
+                    doc.getElementsByClass("crp_related").remove();
+                    doc.getElementsByAttributeValue("id", "sidebar").remove();
+                    doc.getElementsByClass("footerwrap").remove();
+                } else if (mode == Mode.Extras) {
+                    doc = Jsoup.connect(url).ignoreContentType(true).get();
+                    doc.getElementsByAttributeValue("id", "mobile-menu").remove();
+                    doc.getElementsByAttributeValue("id", "contentleft").remove();
+                    doc.getElementsByClass("footerwrap").remove();
+                }
 
 
 
