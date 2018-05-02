@@ -118,9 +118,6 @@ public class Reader extends AsyncTask<String, Void, Void> {
                     URL url = new URL(thumb);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     messages.add(new Message(title, excerpt, bmp, date, link));
-
-                    System.out.println(title);
-                    System.out.println(thumb);
                 } else {
                     messages.add(new Message(title, excerpt, date, link));
 

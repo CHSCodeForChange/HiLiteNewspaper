@@ -26,7 +26,12 @@
         <activity
             android:name=".Links"
             android:label="Other Pages" />
-        <activity android:name=".WebActivity"></activity>
+        <activity android:name=".WebActivity" />
+
+        <service
+            android:name=".NotifManager"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
