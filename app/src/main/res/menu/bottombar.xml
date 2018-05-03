@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Previous"
+        android:title="Previous Page"
         android:icon="@drawable/ic_prev"
         android:id="@+id/prev"/>
 
@@ -13,7 +13,7 @@
         android:id="@+id/sections"/>
 
     <item
-        android:title="Next"
+        android:title="Next Page"
         android:icon="@drawable/ic_next"
         android:id="@+id/next"/>
 

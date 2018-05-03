@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.ShareActionProvider;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -27,6 +28,8 @@ public class WebActivity extends AppCompatActivity {
     };
 
     public static Mode mode;
+
+    private static final boolean cleanPage = true;
 
 
     @Override
@@ -87,7 +90,7 @@ public class WebActivity extends AppCompatActivity {
 
         protected void onPostExecute(Void result) {
 
-            if (doc != null) {
+            if (doc != null && cleanPage) {
                 web.loadData(doc.toString(),"text/html; charset=UTF-8", null);
             } else {
                 if (mode == Mode.Normal) {
@@ -96,6 +99,7 @@ public class WebActivity extends AppCompatActivity {
                     finish();
                 }
             }
+
 
             progressDialog.dismiss();
         }

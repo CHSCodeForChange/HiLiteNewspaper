@@ -74,7 +74,7 @@ public class NotifManager extends Service {
                         Reader reader = new Reader();
                         reader.execute("https://www.hilite.org?json=get_recent_posts&page=1&count=1&include=posts,title");
 
-                        wait(60000);
+                        wait(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -106,9 +106,9 @@ public class NotifManager extends Service {
         thread.start();
         return START_STICKY;
     }
+
     public void onDestroy(){
         super.onDestroy();
-        thread.stop();
     }
 
 

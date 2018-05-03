@@ -39,6 +39,6 @@ public class MyWebViewClient extends WebViewClient
         // TODO Auto-generated method stub
         super.onPageFinished(view, url);
 
-        progressDialog.hide();
+        progressDialog.dismiss();
     }
 }
