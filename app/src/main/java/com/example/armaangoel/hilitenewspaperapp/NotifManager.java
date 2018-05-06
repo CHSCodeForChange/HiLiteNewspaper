@@ -182,6 +182,7 @@ public class NotifManager extends Service {
 
                 title = c.getString("title");
             } catch (final JSONException e) {
+                e.printStackTrace();
             }
 
             return decode(title);

@@ -111,8 +111,7 @@ public class Reader extends AsyncTask<String, Void, Void> {
                 String link = c.getString("url");
 
 
-
-                if (c.has("thumbnail_images")) {
+                if (c.has("thumbnail_images") && !c.isNull("thumbnail_images")) {
                     String thumb = c.getJSONObject("thumbnail_images").getJSONObject("medium" +
                             "").getString("url");
                     URL url = new URL(thumb);
@@ -120,11 +119,12 @@ public class Reader extends AsyncTask<String, Void, Void> {
                     messages.add(new Message(title, excerpt, bmp, date, link));
                 } else {
                     messages.add(new Message(title, excerpt, date, link));
-
                 }
             }
         } catch (final JSONException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return messages;
